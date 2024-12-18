@@ -75,8 +75,8 @@ export class BittrexAdapter extends BaseExchangeAdapter {
    * https://bittrex.github.io/api/v3#/definitions/Market
    *
    *  {
-   *    symbol: "CELO-USD",
-   *    baseCurrencySymbol: "CELO",
+   *    symbol: "PLANQ-USD",
+   *    baseCurrencySymbol: "PLANQ",
    *    quoteCurrencySymbol: "USD",
    *    minTradeSize: "3.00000000",
    *    precision: 3,

@@ -1,13 +1,14 @@
-import { CeloTransactionObject } from '@celo/connect'
+import {ethers, Transaction} from 'ethers'
 import Logger from 'bunyan'
 import { TransactionReceipt } from 'web3-core'
 
 /**
  * Sends a transaction wrapped by the metricAction. Gas is estimated--
  * in the event that gas estimation fails due to this race condition:
- * https://github.com/celo-org/celo-blockchain/issues/1419, which can be identified
+ * Which can be identified
  * by gas estimation failing but the subsequent eth_call done by contractkit not
  * indicating a revert, fallbackGas is used.
+ * @param provider the web3 provider
  * @param tx the transaction to send
  * @param gasPrice the gas price for the transaction
  * @param from the from address for the transaction
@@ -16,7 +17,8 @@ import { TransactionReceipt } from 'web3-core'
  */
 export default async function send(
   logger: Logger,
-  tx: CeloTransactionObject<void>,
+  provider: ethers.providers.Provider,
+  tx: ethers.Transaction<void>,
   gasPrice: number,
   from: string,
   metricAction: <T>(fn: () => Promise<T>, action: string) => Promise<T>,
@@ -26,10 +28,9 @@ export default async function send(
     try {
       // First, attempt to send transaction without a gas amount to have
       // contractkit estimate gas
-      return await tx.send({
-        from,
-        gasPrice,
-      })
+      tx.from = from
+      tx.gasPrice = gasPrice
+      return await provider.sendTransaction(tx)
     } catch (err: any) {
       // If anything fails, the error is caught here.
       // We seek the case where gas estimation has failed but the subsequent
@@ -53,11 +54,10 @@ export default async function send(
           'Gas estimation failed but eth_call did not, using fallback gas'
         )
         // Retry with the fallbackGas to avoid gas estimation
-        return tx.send({
-          from,
-          gasPrice,
-          gas: fallbackGas,
-        })
+        tx.from = from
+        tx.gasPrice = gasPrice
+        tx.gasLimit = fallbackGas
+        return await provider.sendTransaction(tx)
       }
       // If there was a legitimate error, we still throw
       throw err

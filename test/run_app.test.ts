@@ -80,7 +80,7 @@ describe('run_app', () => {
       })
 
       it('correctly processes CURRENCY_PAIR', () => {
-        const corrects = ['CELOUSD', 'CELOBTC', 'CELOEUR']
+        const corrects = ['PLANQUSD', 'PLANQBTC', 'PLANQEUR']
         const incorrects = ['celousd', 'celobtc', 'celoeth', 'invalidpair']
         setAndTestEnvVarValue(EnvVar.CURRENCY_PAIR, corrects, incorrects)
       })
@@ -121,14 +121,14 @@ describe('run_app', () => {
         [EnvVar.AZURE_KEY_VAULT_NAME]: 'testKeyVaultName',
         [EnvVar.AGGREGATION_METHOD]: 'MIDPRICES',
         [EnvVar.PRICE_SOURCES]:
-          '[[{ exchange: "COINBASE", symbol: "CELOBTC", toInvert: false }], \
-            [{ exchange: "BITTREX", symbol: "CELOBTC", toInvert: true, ignoreVolume: false }], \
-            [{ exchange: "KRAKEN", symbol: "CELOBTC", toInvert: false, ignoreVolume: true }]]',
+          '[[{ exchange: "COINBASE", symbol: "PLANQBTC", toInvert: false }], \
+            [{ exchange: "BITTREX", symbol: "PLANQBTC", toInvert: true, ignoreVolume: false }], \
+            [{ exchange: "KRAKEN", symbol: "PLANQBTC", toInvert: false, ignoreVolume: true }]]',
         [EnvVar.HTTP_RPC_PROVIDER_URL]: 'http://bar.foo',
         [EnvVar.MINIMUM_PRICE_SOURCES]: '2',
         [EnvVar.PRIVATE_KEY_PATH]: 'testPkeyPath',
         [EnvVar.REPORT_OFFSET_OVERRIDE]: '5000',
-        [EnvVar.CURRENCY_PAIR]: 'CELOBTC',
+        [EnvVar.CURRENCY_PAIR]: 'PLANQBTC',
         [EnvVar.WALLET_TYPE]: 'AZURE_HSM',
         [EnvVar.WS_RPC_PROVIDER_URL]: 'ws://bar.foo',
       }
@@ -147,7 +147,7 @@ describe('run_app', () => {
               pairs: [
                 {
                   exchange: Exchange.COINBASE,
-                  symbol: OracleCurrencyPair.CELOBTC,
+                  symbol: OracleCurrencyPair.PLANQBTC,
                   toInvert: false,
                   ignoreVolume: false,
                 },
@@ -157,7 +157,7 @@ describe('run_app', () => {
               pairs: [
                 {
                   exchange: Exchange.BITTREX,
-                  symbol: OracleCurrencyPair.CELOBTC,
+                  symbol: OracleCurrencyPair.PLANQBTC,
                   toInvert: true,
                   ignoreVolume: false,
                 },
@@ -167,7 +167,7 @@ describe('run_app', () => {
               pairs: [
                 {
                   exchange: Exchange.KRAKEN,
-                  symbol: OracleCurrencyPair.CELOBTC,
+                  symbol: OracleCurrencyPair.PLANQBTC,
                   toInvert: false,
                   ignoreVolume: true,
                 },
@@ -181,7 +181,7 @@ describe('run_app', () => {
         reporterConfig: {
           ...defaultApplicationConfig.reporterConfig,
         },
-        currencyPair: OracleCurrencyPair.CELOBTC,
+        currencyPair: OracleCurrencyPair.PLANQBTC,
         walletType: WalletType.AZURE_HSM,
         wsRpcProviderUrl: 'ws://bar.foo',
       }

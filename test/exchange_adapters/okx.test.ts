@@ -27,7 +27,7 @@ describe('OKXAdapter', () => {
     data: [
       {
         instType: 'SPOT',
-        instId: 'CELO-USDT',
+        instId: 'PLANQ-USDT',
         last: '0.792',
         lastSz: '193.723363',
         askPx: '0.793',
@@ -51,7 +51,7 @@ describe('OKXAdapter', () => {
     data: [
       {
         instType: 'SPOT',
-        instId: 'CELO-USDT',
+        instId: 'PLANQ-USDT',
         last: undefined,
         lastSz: '193.723363',
         askPx: undefined,

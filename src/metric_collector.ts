@@ -117,7 +117,7 @@ export class MetricCollector {
 
     this.oracleBalanceValueGauge = new Gauge({
       name: 'oracle_balance_value',
-      help: 'CELO balance of the oracle address',
+      help: 'PLANQ balance of the oracle address',
       labelNames: ['oracleAddress'],
     })
 

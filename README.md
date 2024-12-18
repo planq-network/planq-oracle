@@ -1,10 +1,9 @@
-# celo-oracle
+# planq-oracle
 
 ## Introduction
 
-Oracles bring off-chain information on-chain, making that information accessible to the Smart Contracts. The Celo Protocol contains a Smart Contract called "[SortedOracles](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/SortedOracles.sol)". This Smart Contract receives price reports from Oracles, keeps track of the median value of these price reports, and references these price reports against a list of addresses that are permitted to provide price reports. One significant function of Oracles on Celo is supporting the [stability mechanism](https://docs.celo.org/celo-codebase/protocol/stability/doto). Oracles provide the price of CELO in the fiat currency to which a stable value asset is linked, such as cUSD (stable value asset) to the fiat currency to which it is linked (US Dollar).
-
 This Oracle application does the off-chain work of determining the current exchange rate of a given currency pair. It does this by aggregating data across multiple exchanges where these currencies are traded, and reporting the results of this processing to the aforementioned SortedOracles contract.
+This is a fork of the [Celo Oracle](https://github.com/celo-org/celo-oracle) with modifications to support the Planq network.
 
 ## Configuration
 
@@ -51,9 +50,9 @@ pnpm start | npx bunyan
 
 ## Deployment
 
-Docker images are pushed to a public container [registry](https://console.cloud.google.com/artifacts/docker/celo-testnet-production/us-west1/celo-oracle/celo-oracle) upon every release. The latest price sources and data aggregation parameters can be found as helm charts in the celo [monorepo](https://github.com/celo-org/celo-monorepo/tree/master/packages/helm-charts/oracle).
+Docker images are pushed to a public container [registry](https://console.cloud.google.com/artifacts/docker/planq-testnet-production/us-west1/planq-oracle/planq-oracle) upon every release. The latest price sources and data aggregation parameters can be found as helm charts in the planq [monorepo](https://github.com/planq-network/planq-monorepo/tree/master/packages/helm-charts/oracle).
 
-The recommended configuration at the moment is [6787997](https://github.com/celo-org/celo-monorepo/commit/6787997a0b1f4a20cd1e4083e70bcd7db497c93e).
+The recommended configuration at the moment is [6787997](https://github.com/planq-network/planq-monorepo/commit/6787997a0b1f4a20cd1e4083e70bcd7db497c93e).
 
 ## Component Overview
 
@@ -89,8 +88,6 @@ The MetricCollector collects information from a running oracle application insta
 
 ### **Circuit Breaker**
 
-<!-- TODO: resolve feedback from Brynly in this section -->
-
 If extreme market volatility is detected, the “circuit breaker” will shut down the Oracle. The current implementation assumes that all participating Oracles are operating with a circuit breaker and using the same configuration. The coordinated shutdown of all Oracles prevents the on-chain exchange rate from being updated. Until the circuit breakers are reset, the on-chain exchange rate adjusts dynamically. One-sided trading with the reserve will push the exchange rate towards the current market price, while limiting the effect on the reserve of having a rate that is "wrong".
 
 ### **Minimum Number of Exchanges**
@@ -115,8 +112,6 @@ If the prices from different sources (i.e. exchanges) deviate too much, it sugge
 
 ## Contributing
 
-Feel free to jump on the Celo 🚂🚋🚋🚋. Improvements and contributions are highly encouraged! 🙏👊
+Feel free to jump on the Planq 🚂🚋🚋🚋. Improvements and contributions are highly encouraged! 🙏👊
 
-See the [contributing guide](https://docs.celo.org/community/contributing) for details on how to participate.
-
-Not yet ready to contribute but do like the project? Support Celo with a ⭐ or share the love in a [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fcelo.org%2F)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DkKggE5OvyhE&via=celohq&text=Checkout%20celo%21%20Love%20what%20they%20are%20building.&hashtags=celo)
+See the [contributing guide](https://docs.planq.network/community/contributing) for details on how to participate.

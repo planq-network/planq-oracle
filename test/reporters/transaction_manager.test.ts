@@ -323,6 +323,7 @@ describe('transaction manager', () => {
       const txo = toTransactionObject(connection, mockTxObject)
       await send.default(
         baseLogger,
+          this.config.kit,
         txo,
         123,
         '0xf000000000000000000000000000000000000000',
@@ -346,6 +347,7 @@ describe('transaction manager', () => {
       const txo = toTransactionObject(connection, mockTxObject)
       await send.default(
         baseLogger,
+          this.config.kit,
         txo,
         123,
         '0xf000000000000000000000000000000000000000',
@@ -376,6 +378,7 @@ describe('transaction manager', () => {
       await expect(() =>
         send.default(
           baseLogger,
+            this.config.kit,
           txo,
           123,
           '0xf000000000000000000000000000000000000000',

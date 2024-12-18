@@ -83,7 +83,7 @@ describe('Reporter', () => {
     const dataAggregatorCfg = {
       ...defaultDataAggregatorConfig,
       apiKeys: {},
-      currencyPair: OracleCurrencyPair.CELOUSD,
+      currencyPair: OracleCurrencyPair.PLANQUSD,
     }
     dataAggregator = new DataAggregator(dataAggregatorCfg)
     jest.spyOn(dataAggregator, 'currentPrice').mockImplementation(currentPriceFn)
@@ -104,7 +104,7 @@ describe('Reporter', () => {
       maxBlockTimestampAgeMs,
       minReportPriceChangeThreshold,
       oracleAccount: mockOracleAccount,
-      currencyPair: OracleCurrencyPair.CELOUSD,
+      currencyPair: OracleCurrencyPair.PLANQUSD,
       reportTarget: CeloContract.StableToken,
       metricCollector,
       unusedOracleAddresses: [],

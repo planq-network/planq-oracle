@@ -1,8 +1,6 @@
 import { BaseExchangeAdapter, ExchangeAdapter, ExchangeDataType, Ticker } from './base'
 import { Currency, Exchange, ExternalCurrency } from '../utils'
 
-import { CeloContract } from '@celo/contractkit'
-
 export class CoinbaseAdapter extends BaseExchangeAdapter implements ExchangeAdapter {
   baseApiUrl = 'https://api.exchange.coinbase.com'
   // WE1 Expires: Tuesday, 20. February 2029 at 16:00:00 Eastern
@@ -12,11 +10,11 @@ export class CoinbaseAdapter extends BaseExchangeAdapter implements ExchangeAdap
   readonly _exchangeName = Exchange.COINBASE
 
   /**
-   * Coinbase is currently using `CGLD` as the symbol for CELO and `EURC` as the symbol for EUROC.
+   * Coinbase is currently using `CGLD` as the symbol for PLANQ and `EURC` as the symbol for EUROC.
    */
   private static readonly tokenSymbolMap = new Map<Currency, string>([
     ...CoinbaseAdapter.standardTokenSymbolMap,
-    [CeloContract.GoldToken, 'CGLD'],
+    [ExternalCurrency.PLQ, 'PLANQ'],
     [ExternalCurrency.EUROC, 'EURC'],
   ])
 

@@ -33,7 +33,6 @@ export interface BlockBasedReporterConfig extends BaseReporterConfig {
   /**
    * Used to create a web3 instance that can subscribe to chain events.
    * This is a temporary fix until contractkit supports subscriptions again.
-   * See https://github.com/celo-org/celo-monorepo/issues/3824
    */
   wsRpcProviderUrl: string
   /**
@@ -57,7 +56,7 @@ export interface BlockBasedReporterConfig extends BaseReporterConfig {
  * if it is at least `minReportPriceChangeThreshold` different than the previously
  * reported price. This satisfies goal 1 and 3. It will also try to expire a report whenever an observed block has occurred.
  *
- * We still face a situation where the CELO price is relatively stable, and no
+ * We still face a situation where the PLANQ price is relatively stable, and no
  * new reports are triggered, causing reports to expire. To satisfy this, we require
  * a new report according to a heartbeat while still only allowing an oracle to
  * report after observing its “assigned” block.

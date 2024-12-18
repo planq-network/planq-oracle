@@ -33,7 +33,7 @@ export class MockAdapter extends BaseExchangeAdapter {
 describe('BaseExchangeAdapter', () => {
   let adapter: BaseExchangeAdapter
   let metricCollector: MetricCollector
-  const mockTickerEndpoint = '/ticker/CELO-USD'
+  const mockTickerEndpoint = '/ticker/PLANQ-USD'
 
   beforeEach(() => {
     metricCollector = new MetricCollector(baseLogger)
@@ -68,7 +68,7 @@ describe('BaseExchangeAdapter', () => {
           continue
         }
 
-        const path = `CELO-USD/${dataType.toLowerCase()}`
+        const path = `PLANQ-USD/${dataType.toLowerCase()}`
 
         it(`throws an error when trying to fetch ${dataType} and collects metrics`, async () => {
           await expect(async () =>
@@ -94,7 +94,7 @@ describe('BaseExchangeAdapter', () => {
       })
 
       it(`returns a parsed json response for ticker`, async () => {
-        const path = `CELO-USD/${ExchangeDataType.TICKER.toLowerCase()}`
+        const path = `PLANQ-USD/${ExchangeDataType.TICKER.toLowerCase()}`
         const response = await adapter.fetchFromApi(ExchangeDataType.TICKER, path)
 
         expect(response).toEqual({ fake: 'jsonValue' })

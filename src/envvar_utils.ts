@@ -4,9 +4,10 @@ import {
   OracleCurrencyPair,
   ReportStrategy,
   WalletType,
+  ensureLeading0x,
+  isValidAddress,
 } from './utils'
 import { ExchangePriceSourceConfig, OrientedExchangePair } from './exchange_price_source'
-import { ensureLeading0x, isValidAddress } from '@celo/utils/lib/address'
 
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'

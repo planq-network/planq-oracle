@@ -21,7 +21,7 @@ describe('binanceUSAdapter', () => {
   })
   describe('parseTicker', () => {
     const tickerJson = {
-      symbol: 'CELOBTC',
+      symbol: 'PLANQBTC',
       priceChange: '0.00000115',
       priceChangePercent: '1.427',
       weightedAvgPrice: '0.00008156',
@@ -84,7 +84,7 @@ describe('binanceUSAdapter', () => {
     // Note: in the real response, these contain much more info. Only relevant
     // fields are included in this test
     const mockCeloUsdInfo = {
-      symbol: 'CELOBTC',
+      symbol: 'PLANQBTC',
       status: 'TRADING',
       orderTypes: ['LIMIT', 'LIMIT_MAKER', 'MARKET', 'STOP_LOSS_LIMIT', 'TAKE_PROFIT_LIMIT'],
       isSpotTradingAllowed: true,

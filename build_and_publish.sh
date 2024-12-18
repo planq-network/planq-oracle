@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY="us-west1-docker.pkg.dev/celo-testnet-production/celo-oracle"
+REPOSITORY="us-west1-docker.pkg.dev/planq-testnet-production/planq-oracle"
 
 PACKAGE_NAME=$(grep name package.json | awk -F \" '{print $4}')
 PACKAGE_VERSION=$(grep version package.json | awk -F \" '{print $4}')
@@ -9,7 +9,7 @@ COMMIT_HASH=$(git log -1 --pretty=%h)
 VERSION="$PACKAGE_NAME-$PACKAGE_VERSION"
 
 # Check if the package version already exists in the repository
-# 2>&1 is used to redirect stderr to stdout so that grep can 
+# 2>&1 is used to redirect stderr to stdout so that grep can
 # search in the full output of the gcloud command
 gcloud artifacts docker tags list $REPOSITORY --filter "tag~$PACKAGE_VERSION\$" 2>&1 | grep "Listed 0 items" > /dev/null
 # if grep finds "Listed 0 items" exit code is 0 which means that the package version does not exist
@@ -38,7 +38,7 @@ echo "Tagging and pushing"
 docker tag $PACKAGE_NAME $REPOSITORY/$PACKAGE_NAME:$COMMIT_HASH
 docker push $REPOSITORY/$PACKAGE_NAME:$COMMIT_HASH
 
-if [[ $BUILD_ENV == "production" ]]; then 
+if [[ $BUILD_ENV == "production" ]]; then
   docker tag $PACKAGE_NAME $REPOSITORY/$PACKAGE_NAME:$PACKAGE_VERSION
   docker push $REPOSITORY/$PACKAGE_NAME:$PACKAGE_VERSION
 else

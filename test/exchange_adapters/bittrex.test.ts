@@ -22,7 +22,7 @@ describe('BittrexAdapter', () => {
   })
   describe('parseTicker', () => {
     const correctlyFormattedSummaryJson = {
-      symbol: 'CELO-USD',
+      symbol: 'PLANQ-USD',
       high: '215.83000000',
       low: '210.33300000',
       volume: '3335.48514449',
@@ -31,7 +31,7 @@ describe('BittrexAdapter', () => {
       updatedAt: '2020-05-20T10:12:41.393Z',
     }
     const correctlyFormattedTickerJson = {
-      symbol: 'CELO-USD',
+      symbol: 'PLANQ-USD',
       lastTradeRate: '213.76200000',
       bidRate: '213.56500000',
       askRate: '213.83400000',
@@ -79,8 +79,8 @@ describe('BittrexAdapter', () => {
 
   describe('isOrderbookLive', () => {
     const mockStatusJson = {
-      symbol: 'CELO-USD',
-      baseCurrencySymbol: 'CELO',
+      symbol: 'PLANQ-USD',
+      baseCurrencySymbol: 'PLANQ',
       quoteCurrencySymbol: 'USD',
       minTradeSize: '3.00000000',
       precision: 3,

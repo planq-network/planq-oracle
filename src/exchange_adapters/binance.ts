@@ -30,7 +30,7 @@ export class BinanceAdapter extends BaseExchangeAdapter implements ExchangeAdapt
    * @param json parsed response from Binance's ticker endpoint
    *
    * {
-   *   "symbol": "CELOBTC",
+   *   "symbol": "PLANQBTC",
    *   "priceChange": "0.00000023",
    *   "priceChangePercent": "0.281",
    *   "weightedAvgPrice": "0.00008154",

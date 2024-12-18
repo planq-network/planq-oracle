@@ -1,7 +1,6 @@
 import { BaseReporter, BaseReporterConfig } from './reporters/base'
 import { BlockBasedReporter, BlockBasedReporterConfig } from './reporters/block_based_reporter'
-import { Context, MetricCollector } from './metric_collector'
-import { ContractKit, newKit } from '@celo/contractkit'
+import {  MetricCollector } from './metric_collector'
 import { DataAggregator, DataAggregatorConfig } from './data_aggregator'
 import {
   Exchange,
@@ -10,16 +9,14 @@ import {
   WalletType,
   reportTargetForCurrencyPair,
   requireVariables,
-  secondsToMs,
-  tryExponentialBackoff,
+  ensureLeading0x,
+  isValidPrivateKey,
+  privateKeyToAddress
 } from './utils'
-import { ensureLeading0x, isValidPrivateKey, privateKeyToAddress } from '@celo/utils/lib/address'
 
-import { AwsHsmWallet } from '@celo/wallet-hsm-aws'
-import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import Logger from 'bunyan'
-import { ReportTarget } from '@celo/contractkit/lib/wrappers/SortedOracles'
 import fs from 'fs'
+import {ethers} from "ethers";
 
 /**
  * Omit the fields that are passed in by the Application
@@ -121,7 +118,7 @@ export interface OracleApplicationConfig {
    */
   reportStrategy: ReportStrategy
   /* To override the default identifier when reporting to chain */
-  reportTargetOverride: ReportTarget | undefined
+  reportTargetOverride: Address
   /** The type of wallet to use for signing transaction */
   walletType: WalletType
   /** The websocket URL of a web3 provider to listen to events through with block-based reporting */
@@ -171,75 +168,28 @@ export class OracleApplication {
     this.requireUninitialized()
 
     const {
-      address,
-      awsKeyRegion,
-      azureKeyVaultName,
-      azureHsmInitTryCount,
-      azureHsmInitMaxRetryBackoffMs,
       httpRpcProviderUrl,
       privateKeyPath,
       currencyPair,
       walletType,
       wsRpcProviderUrl,
     } = this.config
-    let kit: ContractKit
+    let kit: ethers.providers.Provider
 
     this.logger.info(
       {
         address: this.config.address,
-        azureKeyVaultName,
         privateKeyPath,
       },
       'Initializing app'
     )
 
     switch (this.config.walletType) {
-      case WalletType.AWS_HSM:
-        requireVariables({
-          address,
-          awsKeyRegion,
-        })
-        const awsHsmWallet = new AwsHsmWallet({
-          region: awsKeyRegion,
-          apiVersion: '2014-11-01',
-        })
-        await awsHsmWallet.init()
-        kit = newKit(httpRpcProviderUrl, awsHsmWallet)
-        break
-      case WalletType.AZURE_HSM:
-        requireVariables({
-          address,
-          azureHsmInitTryCount,
-          azureHsmInitMaxRetryBackoffMs,
-        })
-        // It can take time (up to ~1-2 minutes) for the pod to be given its appropriate
-        // AAD identity for it to access Azure Key Vault. To prevent the client from
-        // crashing and possibly sending the pod into a CrashLoopBackoff, we
-        // try to authenticate and exponentially backoff between retries.
-        let azureHsmWallet: AzureHSMWallet
-        await tryExponentialBackoff(
-          async () => {
-            // Credentials are set in the constructor, so we must create a fresh
-            // wallet for each try
-            azureHsmWallet = new AzureHSMWallet(azureKeyVaultName!)
-            await azureHsmWallet.init()
-          },
-          azureHsmInitTryCount!,
-          secondsToMs(5),
-          azureHsmInitMaxRetryBackoffMs!,
-          (e: Error, backoffMs: number) => {
-            this.logger.info(e, `Failed to init wallet, backing off ${backoffMs} ms`)
-            this.metricCollector?.error(Context.WALLET_INIT)
-          }
-        )
-        // wallet will be defined if we are here
-        kit = newKit(httpRpcProviderUrl, azureHsmWallet!)
-        break
       case WalletType.PRIVATE_KEY:
-        kit = newKit(httpRpcProviderUrl)
+         kit = ethers.providers.JsonRpcProvider(httpRpcProviderUrl)
         if (!this.config.devMode) {
           const privateKey = this.getPrivateKeyFromPath(privateKeyPath!)
-          kit.addAccount(privateKey)
+          kit = new ethers.Wallet(privateKey, ethers.providers.Web3Provider(httpRpcProviderUrl))
           this.config.address = privateKeyToAddress(privateKey)
         } else {
           this.config.address = this.config.mockAccount
@@ -247,12 +197,12 @@ export class OracleApplication {
         }
         break
       case WalletType.NODE_ACCOUNT:
-        kit = newKit(httpRpcProviderUrl)
+        kit = ethers.providers.JsonRpcProvider(httpRpcProviderUrl)
         if (this.config.address) {
-          kit.defaultAccount = ensureLeading0x(this.config.address)
+          kit.defaultAccount = kit.getSigner(ensureLeading0x(this.config.address))
         } else {
           // If not default address, use the first one of the account
-          const account = (await kit.web3.eth.getAccounts())[0]
+          const account = (await kit.listAccounts())[0]
           kit.defaultAccount = ensureLeading0x(account)
           this.config.address = account
         }
@@ -271,7 +221,7 @@ export class OracleApplication {
       oracleAccount: this.config.address!,
       reportTarget: this.config.reportTargetOverride
         ? this.config.reportTargetOverride
-        : await reportTargetForCurrencyPair(this.config.currencyPair, kit),
+        : await reportTargetForCurrencyPair(this.config.currencyPair),
       currencyPair,
     }
 

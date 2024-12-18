@@ -50,7 +50,7 @@ describe('CoinbaseAdapter', () => {
     status_message: '',
   }
 
-  describe('using the non-standard symbol for CELO', () => {
+  describe('using the non-standard symbol for PLANQ', () => {
     let fetchFromApiSpy: jest.SpyInstance
     beforeEach(() => {
       fetchFromApiSpy = jest.spyOn(coinbaseAdapter, 'fetchFromApi')

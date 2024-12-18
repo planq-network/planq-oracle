@@ -29,14 +29,14 @@ export class OKXAdapter extends BaseExchangeAdapter implements ExchangeAdapter {
   /**
    *
    * @param json parsed response from bitstamps's ticker endpoint
-   * https://www.okx.com/api/v5/market/ticker?instId=CELO-USDT
+   * https://www.okx.com/api/v5/market/ticker?instId=PLANQ-USDT
    * {
    * "code":"0",
    * "msg":"",
    * "data":[
    *  {
    *    "instType":"SPOT",
-   *    "instId":"CELO-USDT",
+   *    "instId":"PLANQ-USDT",
    *    "last":"0.792",
    *    "lastSz":"193.723363",
    *    "askPx":"0.793",
@@ -72,14 +72,14 @@ export class OKXAdapter extends BaseExchangeAdapter implements ExchangeAdapter {
   /**
    *
    * @param json parsed response from bitstamps's ticker endpoint
-   * https://www.okx.com/api/v5/market/ticker?instId=CELO-USDT
+   * https://www.okx.com/api/v5/market/ticker?instId=PLANQ-USDT
    * {
    * "code":"0",
    * "msg":"",
    * "data":[
    *  {
    *    "instType":"SPOT",
-   *    "instId":"CELO-USDT",
+   *    "instId":"PLANQ-USDT",
    *    "last":"0.792",
    *    "lastSz":"193.723363",
    *    "askPx":"0.793",

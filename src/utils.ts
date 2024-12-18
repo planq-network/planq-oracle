@@ -1,9 +1,7 @@
-import { CeloContract, CeloToken, ContractKit } from '@celo/contractkit'
 import { ErrorContext, MetricCollector } from './metric_collector'
-
+import { toChecksumAddress, isValidPrivate } from '@ethereumjs/util'
 import BigNumber from 'bignumber.js'
 import Logger from 'bunyan'
-import { ReportTarget } from '@celo/contractkit/lib/wrappers/SortedOracles'
 import Web3 from 'web3'
 import { min } from 'mathjs'
 
@@ -27,6 +25,7 @@ export enum Exchange {
   BINANCE = 'BINANCE',
   BINANCEUS = 'BINANCEUS',
   BITTREX = 'BITTREX',
+  BINGX = 'BINGX',
   COINBASE = 'COINBASE',
   OKCOIN = 'OKCOIN',
   BITSO = 'BITSO',
@@ -56,20 +55,21 @@ export enum ExternalCurrency {
   EUROC = 'EUROC',
   XOF = 'XOF',
   KES = 'KES',
+  PLQ = 'PLQ'
 }
 
-export type Currency = ExternalCurrency | CeloToken
+export type Currency = ExternalCurrency
 
 export enum OracleCurrencyPair {
-  CELOUSD = 'CELOUSD',
-  CELOEUR = 'CELOEUR',
-  CELOBTC = 'CELOBTC',
-  CELOBRL = 'CELOBRL',
-  CELOXOF = 'CELOXOF',
-  CELOKES = 'CELOKES',
+  PLANQUSD = 'PLANQUSD',
+  PLANQEUR = 'PLANQEUR',
+  PLANQBTC = 'PLANQBTC',
+  PLANQBRL = 'PLANQBRL',
+  PLANQXOF = 'PLANQXOF',
+  PLANQKES = 'PLANQKES',
   BTCEUR = 'BTCEUR',
-  CELOUSDT = 'CELOUSDT',
-  CELOBUSD = 'CELOBUSD',
+  PLANQUSDT = 'PLANQUSDT',
+  PLANQBUSD = 'PLANQBUSD',
   EURUSDT = 'EURUSDT',
   BTCUSD = 'BTCUSD',
   BTCUSDT = 'BTCUSDT',
@@ -99,26 +99,26 @@ export enum OracleCurrencyPair {
 }
 
 export const CoreCurrencyPair: OracleCurrencyPair[] = [
-  OracleCurrencyPair.CELOEUR,
-  OracleCurrencyPair.CELOUSD,
-  OracleCurrencyPair.CELOBRL,
-  OracleCurrencyPair.CELOXOF,
-  OracleCurrencyPair.CELOKES,
+  OracleCurrencyPair.PLANQEUR,
+  OracleCurrencyPair.PLANQUSD,
+  OracleCurrencyPair.PLANQBRL,
+  OracleCurrencyPair.PLANQXOF,
+  OracleCurrencyPair.PLANQKES,
 ]
 
 export const CurrencyPairBaseQuote: Record<
   OracleCurrencyPair,
   { base: Currency; quote: Currency }
 > = {
-  [OracleCurrencyPair.CELOUSD]: { base: CeloContract.GoldToken, quote: ExternalCurrency.USD },
-  [OracleCurrencyPair.CELOBTC]: { base: CeloContract.GoldToken, quote: ExternalCurrency.BTC },
-  [OracleCurrencyPair.CELOEUR]: { base: CeloContract.GoldToken, quote: ExternalCurrency.EUR },
-  [OracleCurrencyPair.CELOBRL]: { base: CeloContract.GoldToken, quote: ExternalCurrency.BRL },
-  [OracleCurrencyPair.CELOXOF]: { base: CeloContract.GoldToken, quote: ExternalCurrency.XOF },
-  [OracleCurrencyPair.CELOKES]: { base: CeloContract.GoldToken, quote: ExternalCurrency.KES },
+  [OracleCurrencyPair.PLANQUSD]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.USD },
+  [OracleCurrencyPair.PLANQBTC]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.BTC },
+  [OracleCurrencyPair.PLANQEUR]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.EUR },
+  [OracleCurrencyPair.PLANQBRL]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.BRL },
+  [OracleCurrencyPair.PLANQXOF]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.XOF },
+  [OracleCurrencyPair.PLANQKES]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.KES },
   [OracleCurrencyPair.BTCEUR]: { base: ExternalCurrency.BTC, quote: ExternalCurrency.EUR },
-  [OracleCurrencyPair.CELOUSDT]: { base: CeloContract.GoldToken, quote: ExternalCurrency.USDT },
-  [OracleCurrencyPair.CELOBUSD]: { base: CeloContract.GoldToken, quote: ExternalCurrency.BUSD },
+  [OracleCurrencyPair.PLANQUSDT]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.USDT },
+  [OracleCurrencyPair.PLANQBUSD]: { base: ExternalCurrency.PLQ, quote: ExternalCurrency.BUSD },
   [OracleCurrencyPair.EURUSDT]: { base: ExternalCurrency.EUR, quote: ExternalCurrency.USDT },
   [OracleCurrencyPair.USDTUSD]: { base: ExternalCurrency.USDT, quote: ExternalCurrency.USD },
   [OracleCurrencyPair.USDTUSDC]: { base: ExternalCurrency.USDT, quote: ExternalCurrency.USDC },
@@ -173,22 +173,20 @@ export function nonCorePairIdentifier(pair: OracleCurrencyPair) {
  */
 export async function reportTargetForCurrencyPair(
   pair: OracleCurrencyPair,
-  kit: ContractKit
-): Promise<ReportTarget> {
+): Promise<Address> {
   if (!isCorePair(pair)) {
     return nonCorePairIdentifier(pair)
-  } else if (pair === OracleCurrencyPair.CELOUSD) {
-    return CeloContract.StableToken
-  } else if (pair === OracleCurrencyPair.CELOEUR) {
-    // XXX: Workaround until StableTokenEUR makes it fully to ContractKit
-    return kit.registry.addressFor('StableTokenEUR' as CeloContract)
-  } else if (pair === OracleCurrencyPair.CELOBRL) {
+  } else if (pair === OracleCurrencyPair.PLANQUSD) {
+    return STABLE_TOKEN_ADDRESS_MAPPING['StableTokenUSD']
+  } else if (pair === OracleCurrencyPair.PLANQEUR) {
+    return STABLE_TOKEN_ADDRESS_MAPPING['StableTokenEUR']
+  } else if (pair === OracleCurrencyPair.PLANQBRL) {
     // Workaround until StableTokenBRL makes it fully to ContractKit.
-    return kit.registry.addressFor('StableTokenBRL' as CeloContract)
-  } else if (pair === OracleCurrencyPair.CELOXOF) {
-    return kit.registry.addressFor('StableTokenXOF' as CeloContract)
-  } else if (pair === OracleCurrencyPair.CELOKES) {
-    return kit.registry.addressFor('StableTokenKES' as CeloContract)
+    return STABLE_TOKEN_ADDRESS_MAPPING['StableTokenBRL']
+  } else if (pair === OracleCurrencyPair.PLANQXOF) {
+    return STABLE_TOKEN_ADDRESS_MAPPING['StableTokenXOF']
+  } else if (pair === OracleCurrencyPair.PLANQKES) {
+    return STABLE_TOKEN_ADDRESS_MAPPING['StableTokenKES']
   } else {
     throw new Error(`${pair} can not be converted to a ReportTarget`)
   }
@@ -207,7 +205,6 @@ export async function reportTargetForCurrencyPair(
  *   scheduled too quickly, and covers the case where two reports are unintentionally
  *   scheduled immediately after another. This can happen if msToNextAction is called
  *   too quickly before msAheadOfBase >= offsetMs but offsetMs - msAheadOfBase is very small (~1ms).
- *   See https://github.com/celo-org/celo-oracle/issues/47.
  */
 export function msToNextAction(
   frequencyMs: number,
@@ -504,3 +501,38 @@ export async function doAsyncFnWithErrorContext<T>(
     onError(err, errorFnWrapper)
   }
 }
+export type Address = string
+export type StrongAddress = `0x${string}`
+
+export const ensureLeading0x = (input: string): StrongAddress =>
+    input.startsWith('0x') ? (input as StrongAddress) : (`0x${input}` as const)
+
+export const isValidPrivateKey = (privateKey: string) =>
+    privateKey.startsWith('0x') && isValidPrivate(hexToBuffer(privateKey))
+
+export const isValidAddress = (input: string): input is StrongAddress => {
+  if ('string' !== typeof input) {
+    return false
+  }
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(input)) {
+    return false
+  }
+  if (/^(0x|0X)?[0-9A-F]{40}$/.test(input.toUpperCase())) {
+    return true
+  }
+
+  if (toChecksumAddress(input) === input) {
+    return true
+  }
+
+  return false
+}
+
+export const privateKeyToAddress = (privateKey: string) =>
+    toChecksumAddress(
+        ensureLeading0x(privateToAddress(hexToBuffer(privateKey)).toString('hex'))
+    ) as StrongAddress
+
+
+export const normalizeAddressWith0x = (a: Address) =>
+    ensureLeading0x(a).toLowerCase() as StrongAddress

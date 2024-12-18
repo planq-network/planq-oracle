@@ -153,8 +153,8 @@ export class ExchangePriceSource implements PriceSource {
   /**
    * Returns a unique string representation of a source's adapters.
    *
-   * Example: an ExchangePriceSource using two Binance adapters for the CELOBTC
-   * and BTCEUR pairs would have "BINANCE:CELOBTC:false|BINANCE:BTCEUR:false"
+   * Example: an ExchangePriceSource using two Binance adapters for the PLANQBTC
+   * and BTCEUR pairs would have "BINANCE:PLANQBTC:false|BINANCE:BTCEUR:false"
    * as a name.
    */
   name(): string {

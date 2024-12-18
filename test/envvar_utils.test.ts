@@ -39,10 +39,10 @@ describe('fetchParseValidateEnvVar()', () => {
     expect(fetchParseValidateEnvVar(EnvVar.METRICS)).toEqual(false)
   })
   it('correctly handles currency pairs', () => {
-    process.env[EnvVar.CURRENCY_PAIR] = 'CELOUSD'
-    expect(fetchParseValidateEnvVar(EnvVar.CURRENCY_PAIR)).toEqual('CELOUSD')
-    process.env[EnvVar.CURRENCY_PAIR] = 'CELOBTC'
-    expect(fetchParseValidateEnvVar(EnvVar.CURRENCY_PAIR)).toEqual('CELOBTC')
+    process.env[EnvVar.CURRENCY_PAIR] = 'PLANQUSD'
+    expect(fetchParseValidateEnvVar(EnvVar.CURRENCY_PAIR)).toEqual('PLANQUSD')
+    process.env[EnvVar.CURRENCY_PAIR] = 'PLANQBTC'
+    expect(fetchParseValidateEnvVar(EnvVar.CURRENCY_PAIR)).toEqual('PLANQBTC')
   })
   it('correctly handles API_KEYS', () => {
     process.env[EnvVar.API_KEYS] = 'COINBASE:foo,BINANCE:bar'
@@ -58,36 +58,36 @@ describe('fetchParseValidateEnvVar()', () => {
   describe('correctly handles PRICE_SOURCES', () => {
     it('parses a single source correctly', () => {
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "COINBASE", symbol: "CELOBTC", toInvert: false }]]'
+        '[[{ exchange: "COINBASE", symbol: "PLANQBTC", toInvert: false }]]'
       const parsed = fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)
 
       expect(parsed.length).toEqual(1)
       expect(parsed[0].pairs.length).toEqual(1)
       expect(parsed[0].pairs[0]).toEqual({
         exchange: 'COINBASE',
-        symbol: 'CELOBTC',
+        symbol: 'PLANQBTC',
         toInvert: false,
         ignoreVolume: false,
       })
     })
     it('handles ignoreVolume property correctly', () => {
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "COINBASE", symbol: "CELOBTC", toInvert: false, ignoreVolume: true }]]'
+        '[[{ exchange: "COINBASE", symbol: "PLANQBTC", toInvert: false, ignoreVolume: true }]]'
       const parsed = fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)
       expect(parsed[0].pairs[0].ignoreVolume).toBeTruthy()
 
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "BINANCE", symbol: "CELOBTC", toInvert: false, ignoreVolume: false }]]'
+        '[[{ exchange: "BINANCE", symbol: "PLANQBTC", toInvert: false, ignoreVolume: false }]]'
       const parsed2 = fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)
       expect(parsed2[0].pairs[0].ignoreVolume).toBeFalsy()
 
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "KRAKEN", symbol: "CELOBTC", toInvert: false}]]'
+        '[[{ exchange: "KRAKEN", symbol: "PLANQBTC", toInvert: false}]]'
       const parsed3 = fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)
       expect(parsed3[0].pairs[0].ignoreVolume).toBeFalsy()
     })
     it('throws when any property has an invalid value', () => {
-      process.env[EnvVar.PRICE_SOURCES] = '[[{ exchange: 123, symbol: "CELOBTC", toInvert: false}]]'
+      process.env[EnvVar.PRICE_SOURCES] = '[[{ exchange: 123, symbol: "PLANQBTC", toInvert: false}]]'
       expect(() => fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)).toThrow(
         'exchange is 123 and not of type string'
       )
@@ -99,13 +99,13 @@ describe('fetchParseValidateEnvVar()', () => {
       )
 
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "BINANCE", symbol: "CELOBTC", toInvert: 345}]]'
+        '[[{ exchange: "BINANCE", symbol: "PLANQBTC", toInvert: 345}]]'
       expect(() => fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)).toThrow(
         'toInvert is 345 and not of type boolean'
       )
 
       process.env[EnvVar.PRICE_SOURCES] =
-        '[[{ exchange: "BINANCE", symbol: "CELOBTC", toInvert: false, ignoreVolume: "BTC"}]]'
+        '[[{ exchange: "BINANCE", symbol: "PLANQBTC", toInvert: false, ignoreVolume: "BTC"}]]'
       expect(() => fetchParseValidateEnvVar(EnvVar.PRICE_SOURCES)).toThrow(
         'ignoreVolume is BTC and not of type boolean'
       )
@@ -114,11 +114,11 @@ describe('fetchParseValidateEnvVar()', () => {
       process.env[EnvVar.PRICE_SOURCES] = `
         [
           [
-            { exchange: "COINBASE", symbol: "CELOBTC", toInvert: false},
-            { exchange: "BINANCE", symbol: "CELOBTC", toInvert: false, ignoreVolume: true}
+            { exchange: "COINBASE", symbol: "PLANQBTC", toInvert: false},
+            { exchange: "BINANCE", symbol: "PLANQBTC", toInvert: false, ignoreVolume: true}
           ],
           [
-            { exchange: "BITTREX", symbol: "CELOBTC", toInvert: true, ignoreVolume: false }
+            { exchange: "BITTREX", symbol: "PLANQBTC", toInvert: true, ignoreVolume: false }
           ]
         ]
       `
@@ -128,12 +128,12 @@ describe('fetchParseValidateEnvVar()', () => {
       expect(parsed[0].pairs.length).toEqual(2)
       expect(parsed[1].pairs.length).toEqual(1)
       expect(parsed[0].pairs).toEqual([
-        { exchange: 'COINBASE', symbol: 'CELOBTC', toInvert: false, ignoreVolume: false },
-        { exchange: 'BINANCE', symbol: 'CELOBTC', toInvert: false, ignoreVolume: true },
+        { exchange: 'COINBASE', symbol: 'PLANQBTC', toInvert: false, ignoreVolume: false },
+        { exchange: 'BINANCE', symbol: 'PLANQBTC', toInvert: false, ignoreVolume: true },
       ])
       expect(parsed[1].pairs[0]).toEqual({
         exchange: 'BITTREX',
-        symbol: 'CELOBTC',
+        symbol: 'PLANQBTC',
         toInvert: true,
         ignoreVolume: false,
       })

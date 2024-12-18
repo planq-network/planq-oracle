@@ -1,6 +1,4 @@
-import { ContractKit } from '@celo/contractkit'
-import { ReportTarget } from '@celo/contractkit/lib/wrappers/SortedOracles'
-import { normalizeAddressWith0x } from '@celo/utils/lib/address'
+import {Address, normalizeAddressWith0x} from '../utils'
 import BigNumber from 'bignumber.js'
 import Logger from 'bunyan'
 import { TransactionReceipt } from 'web3-core'
@@ -16,9 +14,9 @@ import {
   ReportStrategy,
 } from '../utils'
 import { sendTransaction, sendTransactionWithRetries } from './transaction_manager'
+import {ethers} from "ethers";
 
 // Fallback gas amounts -- in the event gas estimation fails due to this race
-// condition: https://github.com/celo-org/celo-blockchain/issues/1419
 // We fall back to a hardcoded gas amount intended to be a little higher than
 // normal to be extra safe:
 
@@ -85,7 +83,7 @@ export interface BaseReporterConfig {
   /**
    * An instance of contractkit that can sign/send txs from the oracle account
    */
-  readonly kit: ContractKit
+  readonly kit: ethers.providers.Provider
   /**
    * An optional MetricCollector instance to report metrics
    */
@@ -107,7 +105,7 @@ export interface BaseReporterConfig {
   /**
    * Identifier used for the currency pair when reporting to chain
    */
-  readonly reportTarget: ReportTarget
+  readonly reportTarget: Address
   /**
    * A list of unused addresses to ignore on the whitelist.
    */
@@ -344,6 +342,7 @@ export abstract class BaseReporter {
 
       return sendTransaction(
         this.logger,
+        this.config.kit,
         tx,
         gasPrice,
         this.config.oracleAccount,
@@ -462,7 +461,7 @@ export abstract class BaseReporter {
   }
 
   /**
-   * Returns gasPriceMinimum for CELO as BigNumber
+   * Returns gasPriceMinimum for PLANQ as BigNumber
    */
   private async getGasPriceMin() {
     const gasPriceMinWrapper = await this.config.kit.contracts.getGasPriceMinimum()

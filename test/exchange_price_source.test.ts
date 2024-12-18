@@ -48,7 +48,7 @@ describe('impliedPair()', () => {
     baseVolume: new BigNumber(100000),
     quoteVolume: new BigNumber(100000),
   }
-  const testCELOEUR: PairData = {
+  const testPLANQEUR: PairData = {
     bid: new BigNumber(4.2),
     ask: new BigNumber(4.21),
     baseVolume: new BigNumber(5000),
@@ -61,7 +61,7 @@ describe('impliedPair()', () => {
     quoteVolume: new BigNumber(12100),
   }
 
-  const testCELOBTC: PairData = {
+  const testPLANQBTC: PairData = {
     bid: new BigNumber(0.00009877),
     ask: new BigNumber(0.00009896),
     baseVolume: new BigNumber(626670.7),
@@ -96,8 +96,8 @@ describe('impliedPair()', () => {
       })
     })
 
-    describe('CELO/USD via EUR', () => {
-      const pairs: PairData[] = [testCELOEUR, testEURUSD]
+    describe('PLANQ/USD via EUR', () => {
+      const pairs: PairData[] = [testPLANQEUR, testEURUSD]
       it('calculates implied pair', () => {
         const implied = impliedPair(pairs)
         expect(implied.bid.precision(5)).toEqual(new BigNumber(5.082))
@@ -107,8 +107,8 @@ describe('impliedPair()', () => {
       })
     })
 
-    describe('CELO/USD via BTC', () => {
-      const pairs: PairData[] = [testCELOBTC, testBTCUSD]
+    describe('PLANQ/USD via BTC', () => {
+      const pairs: PairData[] = [testPLANQBTC, testBTCUSD]
       it('calculates implied pair', () => {
         const implied = impliedPair(pairs)
         expect(implied.bid.precision(5)).toEqual(new BigNumber(3.5018))
@@ -195,7 +195,7 @@ describe('ExchangePriceSource', () => {
     bid: new BigNumber(9.99),
     ask: new BigNumber(10.01),
     source: Exchange.BINANCE,
-    symbol: 'CELOUSD',
+    symbol: 'PLANQUSD',
     baseVolume: new BigNumber(100),
     quoteVolume: new BigNumber(100),
     lastPrice: new BigNumber(10),
@@ -207,7 +207,7 @@ describe('ExchangePriceSource', () => {
     bid: new BigNumber(10.01),
     ask: new BigNumber(9.99),
     source: Exchange.BITTREX,
-    symbol: 'CELOEUR',
+    symbol: 'PLANQEUR',
     baseVolume: new BigNumber(100),
     quoteVolume: new BigNumber(100),
     lastPrice: new BigNumber(10),
@@ -217,12 +217,12 @@ describe('ExchangePriceSource', () => {
   describe('name()', () => {
     it('renders the name for a single adapter', () => {
       const priceSource = sourceFromTickers([goodTicker])
-      expect(priceSource.name()).toEqual('BINANCE:CELOUSD:false')
+      expect(priceSource.name()).toEqual('BINANCE:PLANQUSD:false')
     })
 
     it('renders the name for multiple adapters', () => {
       const priceSource = sourceFromTickers([goodTicker, invalidTicker])
-      expect(priceSource.name()).toEqual('BINANCE:CELOUSD:false|BITTREX:CELOEUR:false')
+      expect(priceSource.name()).toEqual('BINANCE:PLANQUSD:false|BITTREX:PLANQEUR:false')
     })
   })
 

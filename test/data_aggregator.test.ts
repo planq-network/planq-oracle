@@ -4,14 +4,13 @@ import {
   AggregationMethod,
   Exchange,
   ExternalCurrency,
-  OracleCurrencyPair,
   minutesToMs,
+  OracleCurrencyPair,
   secondsToMs,
 } from '../src/utils'
 
 import BigNumber from 'bignumber.js'
 import { BittrexAdapter } from '../src/exchange_adapters/bittrex'
-import { CeloContract } from '@celo/contractkit'
 import { CoinbaseAdapter } from '../src/exchange_adapters/coinbase'
 import { DataAggregator } from '../src/data_aggregator'
 import { ExchangePriceSourceConfig } from '../src/exchange_price_source'
@@ -37,7 +36,7 @@ describe('DataAggregator', () => {
     BINANCE: 'mockBinanceApiKey',
     COINBASE: 'mockCoinbaseApiKey',
   }
-  let currencyPair = OracleCurrencyPair.CELOUSD
+  let currencyPair = OracleCurrencyPair.PLANQUSD
   let minPriceSourceCount = 1
   const minAggregatedVolume = new BigNumber(1000)
 
@@ -198,10 +197,10 @@ describe('DataAggregator', () => {
   })
 
   describe('setup', () => {
-    const configsToTest: [OracleCurrencyPair, CeloContract, ExternalCurrency][] = [
-      [OracleCurrencyPair.CELOUSD, CeloContract.GoldToken, ExternalCurrency.USD],
-      [OracleCurrencyPair.CELOBTC, CeloContract.GoldToken, ExternalCurrency.BTC],
-      [OracleCurrencyPair.CELOEUR, CeloContract.GoldToken, ExternalCurrency.EUR],
+    const configsToTest: [OracleCurrencyPair, ExternalCurrency][] = [
+      [OracleCurrencyPair.PLANQUSD, ExternalCurrency.PLQ, ExternalCurrency.USD],
+      [OracleCurrencyPair.PLANQBTC, ExternalCurrency.PLQ, ExternalCurrency.BTC],
+      [OracleCurrencyPair.PLANQEUR, ExternalCurrency.PLQ, ExternalCurrency.EUR],
     ]
     for (const [currencyPairToTest, expectedBaseCurrency, expectedQuoteCurrency] of configsToTest) {
       describe(`for ${currencyPairToTest}`, () => {
@@ -295,7 +294,7 @@ describe('DataAggregator', () => {
           pairs: [
             {
               exchange: Exchange.COINBASE,
-              symbol: OracleCurrencyPair.CELOUSD,
+              symbol: OracleCurrencyPair.PLANQUSD,
               toInvert: false,
               ignoreVolume: false,
             },
@@ -305,7 +304,7 @@ describe('DataAggregator', () => {
           pairs: [
             {
               exchange: Exchange.OKCOIN,
-              symbol: OracleCurrencyPair.CELOUSD,
+              symbol: OracleCurrencyPair.PLANQUSD,
               toInvert: false,
               ignoreVolume: false,
             },
@@ -315,7 +314,7 @@ describe('DataAggregator', () => {
           pairs: [
             {
               exchange: Exchange.BITTREX,
-              symbol: OracleCurrencyPair.CELOUSD,
+              symbol: OracleCurrencyPair.PLANQUSD,
               toInvert: false,
               ignoreVolume: false,
             },
@@ -325,7 +324,7 @@ describe('DataAggregator', () => {
           pairs: [
             {
               exchange: Exchange.BINANCE,
-              symbol: OracleCurrencyPair.CELOUSD,
+              symbol: OracleCurrencyPair.PLANQUSD,
               toInvert: false,
               ignoreVolume: false,
             },
@@ -335,7 +334,7 @@ describe('DataAggregator', () => {
           pairs: [
             {
               exchange: Exchange.BITSO,
-              symbol: OracleCurrencyPair.CELOUSD,
+              symbol: OracleCurrencyPair.PLANQUSD,
               toInvert: false,
               ignoreVolume: false,
             },

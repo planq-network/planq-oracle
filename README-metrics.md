@@ -57,7 +57,7 @@ Labels:
 
 Example labels:
 ```
-{exchange="Bittrex",endpoint="markets/CELO-USD/ticker",pair="CELO/USD"}
+{exchange="Bittrex",endpoint="markets/PLANQ-USD/ticker",pair="PLANQ/USD"}
 ```
 
 ### `oracle_exchange_api_request_error_count`
@@ -71,9 +71,9 @@ Labels:
 
 Example labels:
 ```
-{exchange="Bittrex",endpoint="markets/CELO-USD/ticker",pair="CELO/USD",type="404"}
-{exchange="Bittrex",endpoint="markets/CELO-USD/ticker",pair="CELO/USD",type="fetch"}
-{exchange="Bittrex",endpoint="markets/CELO-USD/ticker",pair="CELO/USD",type="json_parse"}
+{exchange="Bittrex",endpoint="markets/PLANQ-USD/ticker",pair="PLANQ/USD",type="404"}
+{exchange="Bittrex",endpoint="markets/PLANQ-USD/ticker",pair="PLANQ/USD",type="fetch"}
+{exchange="Bittrex",endpoint="markets/PLANQ-USD/ticker",pair="PLANQ/USD",type="json_parse"}
 ```
 
 ### `oracle_last_block_header_number`
@@ -120,7 +120,7 @@ Labels:
 
 Example labels:
 ```
-{pair="CELOEUR",source="COINBASE:CGLD-EUR:false",property="price"}
+{pair="PLANQEUR",source="COINBASE:CGLD-EUR:false",property="price"}
 ```
 
 Valid property values:
@@ -186,7 +186,7 @@ Labels:
 
 Example labels:
 ```
-{exchange="BITTREX",pair="CELO/USD",property="ask"}
+{exchange="BITTREX",pair="PLANQ/USD",property="ask"}
 ```
 
 Valid property values:

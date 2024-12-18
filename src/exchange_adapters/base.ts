@@ -3,7 +3,6 @@ import { ExchangeApiRequestError, MetricCollector } from '../metric_collector'
 import fetch, { Response } from 'node-fetch'
 
 import BigNumber from 'bignumber.js'
-import { CeloContract } from '@celo/contractkit'
 import Logger from 'bunyan'
 import https from 'https'
 import tls from 'tls'
@@ -124,17 +123,9 @@ export abstract class BaseExchangeAdapter {
    * If there are deviations, this can be used as a base, and the nonstandard
    * symbols can be passed in as overrides.
    *
-   * for example, do this inside of an ExchangeAdapter class definition:
-   *
-   *    private static readonly tokenSymbolMap = new Map<Currency, string>([
-   *      ...AdapterName.standardTokenSymbolMap,
-   *      [CeloContract.GoldToken, 'differentCeloGoldSymbol']
-   *    ])
-   *
    */
   protected static readonly standardTokenSymbolMap = new Map<Currency, string>([
-    [CeloContract.GoldToken, 'CELO'],
-    [CeloContract.StableToken, 'CUSD'],
+    [ExternalCurrency.PLQ, 'PLANQ'],
     [ExternalCurrency.USD, 'USD'],
     [ExternalCurrency.EUR, 'EUR'],
     [ExternalCurrency.BRL, 'BRL'],

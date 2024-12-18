@@ -33,8 +33,8 @@ export class KuCoinAdapter extends BaseExchangeAdapter implements ExchangeAdapte
    *   "time":1674501725001,
    *   "ticker":[
    *    {
-   *    "symbol":"CELO-USDT",
-   *    "symbolName":"CELO-USDT",
+   *    "symbol":"PLANQ-USDT",
+   *    "symbolName":"PLANQ-USDT",
    *    "buy":"0.7555",
    *    "sell":"0.7563",
    *    "changeRate":"0.0907",
@@ -77,9 +77,9 @@ export class KuCoinAdapter extends BaseExchangeAdapter implements ExchangeAdapte
    * "code":"200000",
    * "data":[
    *  {
-   *   "symbol":"CELO-USDT",
-   *   "name":"CELO-USDT",
-   *   "baseCurrency":"CELO",
+   *   "symbol":"PLANQ-USDT",
+   *   "name":"PLANQ-USDT",
+   *   "baseCurrency":"PLANQ",
    *   "quoteCurrency":"USDT",
    *   "feeCurrency":"USDT",
    *   "market":"USDS",

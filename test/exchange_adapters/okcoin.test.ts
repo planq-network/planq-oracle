@@ -24,8 +24,8 @@ describe('OKCoinAdapter', () => {
     const correctlyFormattedJson = {
       best_ask: '200.99',
       best_bid: '200.93',
-      instrument_id: 'CELO-USD',
-      product_id: 'CELO-USD',
+      instrument_id: 'PLANQ-USD',
+      product_id: 'PLANQ-USD',
       last: '200.81',
       last_qty: '0',
       ask: '200.99',

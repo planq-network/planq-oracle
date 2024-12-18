@@ -103,7 +103,7 @@ export const testTickerArray: Ticker[][] = testTickerAsks.map((row, rowIndex) =>
     let thisTicker: Ticker
     thisTicker = {
       source: testTickerExchanges[rowIndex][colIndex],
-      symbol: 'CELO/USD',
+      symbol: 'PLANQ/USD',
       timestamp: 1000000 + rowIndex * 100,
       ask: new BigNumber(thisAsk),
       bid: new BigNumber(testTickerBids[rowIndex][colIndex]),

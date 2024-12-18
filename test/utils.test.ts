@@ -23,55 +23,46 @@ import {
 
 jest.mock('bunyan')
 jest.mock('../src/metric_collector')
-jest.mock('@celo/contractkit')
-jest.mock('@celo/contractkit/lib/address-registry')
 
 jest.setTimeout(10 * 1000)
 
 describe('utils', () => {
   describe('#reportTargetForCurrencyPair', () => {
     // @ts-ignore because it's mocked
-    let kit: ContractKit
     let registryLookup: jest.SpyInstance
 
-    beforeEach(() => {
-      jest.clearAllMocks()
-      kit = ({ registry: { addressFor: jest.fn() } } as unknown) as ContractKit
-      registryLookup = jest.spyOn(kit.registry, 'addressFor')
-    })
-
-    describe('with CELOUSD', () => {
-      const pair = OracleCurrencyPair.CELOUSD
-      it('is CeloContract.StableToken', async () => {
-        expect(await reportTargetForCurrencyPair(pair, kit)).toEqual(CeloContract.StableToken)
+    describe('with PLANQUSD', () => {
+      const pair = OracleCurrencyPair.PLANQUSD
+      it('is StableToken', async () => {
+        expect(await reportTargetForCurrencyPair(pair)).toEqual(STABLE_TOKEN_ADDRESS_MAPPING['StableTokenUSD'])
         expect(registryLookup).not.toHaveBeenCalled()
       })
     })
 
-    describe('with CELOEUR', () => {
-      const pair = OracleCurrencyPair.CELOEUR
+    describe('with PLANQEUR', () => {
+      const pair = OracleCurrencyPair.PLANQEUR
       it('looks up the registry', async () => {
         const addr = Web3.utils.randomHex(20)
         registryLookup.mockReturnValue(addr)
-        expect(await reportTargetForCurrencyPair(pair, kit)).toEqual(addr)
+        expect(await reportTargetForCurrencyPair(pair)).toEqual(addr)
         expect(registryLookup).toHaveBeenCalledWith('StableTokenEUR')
       })
     })
 
-    describe('with CELOBRL', () => {
-      const pair = OracleCurrencyPair.CELOBRL
+    describe('with PLANQBRL', () => {
+      const pair = OracleCurrencyPair.PLANQBRL
       it('looks up the registry', async () => {
         const addr = Web3.utils.randomHex(20)
         registryLookup.mockReturnValue(addr)
-        expect(await reportTargetForCurrencyPair(pair, kit)).toEqual(addr)
+        expect(await reportTargetForCurrencyPair(pair)).toEqual(addr)
         expect(registryLookup).toHaveBeenCalledWith('StableTokenBRL')
       })
     })
 
-    describe('with CELOBTC', () => {
-      const pair = OracleCurrencyPair.CELOBTC
+    describe('with PLANQBTC', () => {
+      const pair = OracleCurrencyPair.PLANQBTC
       it('derives the identifier', async () => {
-        expect(await reportTargetForCurrencyPair(pair, kit)).toEqual(
+        expect(await reportTargetForCurrencyPair(pair)).toEqual(
           '0x018CAad1ED69eeDD40ed8309A81Eb78c937563a6'
         )
         expect(registryLookup).not.toHaveBeenCalled()

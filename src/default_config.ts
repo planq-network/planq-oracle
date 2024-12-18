@@ -63,7 +63,7 @@ export const defaultApplicationConfig: OracleApplicationConfig = {
   azureHsmInitMaxRetryBackoffMs: secondsToMs(30),
   azureHsmInitTryCount: 5,
   baseLogger,
-  currencyPair: OracleCurrencyPair.CELOUSD,
+  currencyPair: OracleCurrencyPair.PLANQUSD,
   dataAggregatorConfig: defaultDataAggregatorConfig,
   httpRpcProviderUrl: 'http://localhost:8545',
   metrics: true,

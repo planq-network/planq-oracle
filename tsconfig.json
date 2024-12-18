@@ -18,5 +18,4 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
   },
-  "include": ["src", "./node_modules/@celo/contractkit/types"],
 }

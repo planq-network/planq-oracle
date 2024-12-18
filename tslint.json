@@ -1,5 +1,4 @@
 {
-  "extends": ["@celo/typescript/tslint.json"],
   "rulesDirectory": [
     "tslint-no-focused-test"
   ],

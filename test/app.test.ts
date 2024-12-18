@@ -53,7 +53,7 @@ describe('OracleApplication', () => {
   const circuitBreakerPriceChangeThresholdMin = new BigNumber(0.1)
   const circuitBreakerPriceChangeThresholdTimeMultiplier = new BigNumber(0.0075)
   const circuitBreakerDurationTimeMs = 20 * 60 * 1000 // 20 minutes.
-  const currencyPair = OracleCurrencyPair.CELOUSD
+  const currencyPair = OracleCurrencyPair.PLANQUSD
   const expectedBlockTimeMs = secondsToMs(5)
   const httpRpcProviderUrl = 'http://test.foo'
   const metrics = true
@@ -136,7 +136,7 @@ describe('OracleApplication', () => {
     expect(DataAggregator).toHaveBeenCalledWith({
       ...dataAggregatorConfig,
       apiKeys,
-      currencyPair: 'CELOUSD',
+      currencyPair: 'PLANQUSD',
       metricCollector: oracleApplication.metricCollector,
     })
   })

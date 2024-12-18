@@ -1,4 +1,4 @@
-import { CeloTransactionObject } from '@celo/connect'
+import { Transaction } from 'web3-eth'
 import Logger from 'bunyan'
 import { TransactionReceipt } from 'web3-core'
 import { TransactionManagerConfig } from '../../app'
@@ -8,7 +8,7 @@ import send from './send'
 
 export default async function sendWithRetries(
   logger: Logger,
-  tx: CeloTransactionObject<void>,
+  tx: Transaction<void>,
   initialGasPrice: number,
   config: TransactionManagerConfig,
   metricAction: <T>(fn: () => Promise<T>, action: string) => Promise<T>,
@@ -26,6 +26,7 @@ export default async function sendWithRetries(
     try {
       return await send(
         logger,
+        this.config.kit,
         tx,
         calculatedGasPrice,
         config.oracleAccount,
