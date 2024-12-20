@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js'
 import Logger from 'bunyan'
 import Web3 from 'web3'
 import { min } from 'mathjs'
+import { secp256k1 } from 'ethereum-cryptography/secp256k1'
+import {keccak256} from "ethers/lib/utils";
 
 export const MS_PER_SECOND = 1000
 export const MS_PER_MINUTE = 60 * MS_PER_SECOND
@@ -506,10 +508,13 @@ export type StrongAddress = `0x${string}`
 
 export const ensureLeading0x = (input: string): StrongAddress =>
     input.startsWith('0x') ? (input as StrongAddress) : (`0x${input}` as const)
-
+export const hexToBuffer = (input: string) => Buffer.from(trimLeading0x(input), 'hex')
+export const trimLeading0x = (input: string) => (input.startsWith('0x') ? input.slice(2) : input)
 export const isValidPrivateKey = (privateKey: string) =>
     privateKey.startsWith('0x') && isValidPrivate(hexToBuffer(privateKey))
-
+const privateToAddress = function (privateKey: Buffer): Buffer {
+  return publicToAddress(privateToPublic(privateKey))
+}
 export const isValidAddress = (input: string): input is StrongAddress => {
   if ('string' !== typeof input) {
     return false
@@ -527,7 +532,21 @@ export const isValidAddress = (input: string): input is StrongAddress => {
 
   return false
 }
-
+export const pubToAddress = function (pubKey: Buffer, sanitize: boolean = false): Buffer {
+  if (sanitize && pubKey.length !== 64) {
+    pubKey = Buffer.from(secp256k1.ProjectivePoint.fromHex(pubKey).toRawBytes(false).slice(1))
+  }
+  if (pubKey.length !== 64) {
+    throw new Error('Expected pubKey to be of length 64')
+  }
+  // Only take the lower 160bits of the hash
+  return Buffer.from(keccak256(pubKey)).slice(-20)
+}
+export const publicToAddress = pubToAddress
+export const privateToPublic = function (privateKey: Buffer): Buffer {
+  // skip the type flag and use the X, Y points
+  return Buffer.from(secp256k1.ProjectivePoint.fromPrivateKey(privateKey).toRawBytes(false).slice(1))
+}
 export const privateKeyToAddress = (privateKey: string) =>
     toChecksumAddress(
         ensureLeading0x(privateToAddress(hexToBuffer(privateKey)).toString('hex'))

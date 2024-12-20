@@ -125,7 +125,7 @@ export abstract class BaseExchangeAdapter {
    *
    */
   protected static readonly standardTokenSymbolMap = new Map<Currency, string>([
-    [ExternalCurrency.PLQ, 'PLANQ'],
+    [ExternalCurrency.PLQ, 'PLQ'],
     [ExternalCurrency.USD, 'USD'],
     [ExternalCurrency.EUR, 'EUR'],
     [ExternalCurrency.BRL, 'BRL'],
@@ -255,7 +255,7 @@ export abstract class BaseExchangeAdapter {
         this.standardPairSymbol,
         res.status
       )
-      return Promise.reject(new Error(`Bad fetch status code ${res.status}`))
+      return Promise.reject(new Error(`Bad fetch status code ${res.status} ${await res.text()}`))
     }
     let jsonRes: JSON
     try {
