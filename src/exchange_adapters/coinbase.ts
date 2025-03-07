@@ -10,7 +10,7 @@ export class CoinbaseAdapter extends BaseExchangeAdapter implements ExchangeAdap
   readonly _exchangeName = Exchange.COINBASE
 
   /**
-   * Coinbase is currently using `CGLD` as the symbol for PLANQ and `EURC` as the symbol for EUROC.
+   * Coinbase is currently using `` as the symbol for PLANQ and `EURC` as the symbol for EUROC.
    */
   private static readonly tokenSymbolMap = new Map<Currency, string>([
     ...CoinbaseAdapter.standardTokenSymbolMap,
